@@ -19,7 +19,7 @@
 快速安装及启动
 -------------
 ```bash
-git clone http
+git clone git@github.com:BeyondLIG/WasteRecyclingSystem.git
 cd WasteRecycleSystem 
 pip freeze -> requirements.txt
 python manage.py makemigrations 
