@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block titile %}
+废品回收系统 | 废品种类
+{% endblock %}
+{% block bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="index.html">首页</a>></li>
+                <li>废品种类</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+        <section>
+	<div class="wp butler_list_box list">
+	<div class='left'>
+		<div class="butler_list layout">
+			<div class="head">
+				<ul class="fl tab_header">
+					<li class="{% if sort == '' %}active{% endif %}"><a href="?sort=">废品种类</a> </li>
+				</ul>
+			</div>
+                {% for scrap in scraps.object_list %}
+                    <dl class="des">
+                    <dd>
+						<ul class="cont">
+                            <li>商品名称：<span>{{ scrap.name }}</span></li>
+							<li>商品单价：<span>{{ scrap.price }}</span></li>
+						</ul>
+					</dd>
+                </dl>
+                {% endfor %}
+        </div>
+        <div class="pageturn">
+            <ul class="pagelist">
+                {% if scraps.has_previous %}
+                    <li class="long"><a href="?{{ scraps.previous_page_number.querystring }}">上一页</a></li>
+                {% endif %}
+
+                {% for page in scraps.pages %}
+                    {% if page %}
+                        {% ifequal page scraps.number %}
+                            <li class="active"><a href="{{ page.querystring }}">{{ page }}</a></li>
+                        {% else %}
+                            <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                        {% endifequal %}
+                    {% else %}
+                        <li class="none"><a href="">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if scraps.has_next %}
+                    <li class="long"><a href="?{{ scraps.next_page_number.querystring }}">下一页</a></li>
+                {% endif %}
+
+
+            </ul>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}

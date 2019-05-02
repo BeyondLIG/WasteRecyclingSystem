@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block titile %}
+    废品回收系统 | 废品种类
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="/index/">首页</a>></li>
+                <li>订单列表</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block content %}
+    <section>
+        <div class="wp butler_list_box list">
+            <div class='left'>
+                <div class="butler_list layout">
+                    <div class="head">
+                        <ul class="fl tab_header">
+                            {% ifequal request.user.role 1 %}
+                                <li>订单列表</li>
+                            {% endifequal %}
+                            {% ifequal request.user.role 0 %}
+                                <li id="order_create_btn" type="button">下单</li>
+                                {% csrf_token %}
+                            {% endifequal %}
+                        </ul>
+                    </div>
+                    {#                     回收人员#}
+                    {% ifequal request.user.role 1 %}
+                        {% for order in orders.object_list %}
+                            <dl class="des">
+                                <dt>
+                                    {% ifequal order.status 1 %}
+                                        <a href="{% url 'order:order_submit' order.order_number %}">
+                                            <span>提交订单</span>
+                                        </a>
+                                    {% endifequal %}
+                                </dt>
+                                <dd>
+                                    <ul class="cont">
+                                        <li>订单号：<span>{{ order.order_number }}</span></li>
+                                        <li>顾客手机号：<span>{{ order.customer_phone }}&nbsp;</span></li>
+                                        <li>顾客地址：<span>{{ order.customer_address }}</span></li>
+                                        <li>订单状态：
+                                            {% ifequal order.status 0 %}<span>未处理</span>{% endifequal %}
+                                            {% ifequal order.status 1 %}<span>处理中</span>{% endifequal %}
+                                            {% ifequal order.status 2 %}<span>处理完成</span>{% endifequal %}
+                                        </li>
+                                        <li>下单时间：<span>{{ order.time }}</span></li>
+                                    </ul>
+                                </dd>
+                            </dl>
+                        {% endfor %}
+                    {% endifequal %}
+
+                    {#                    // 社区人员#}
+                    {% ifequal request.user.role 0 %}
+                        {% for order in orders.object_list %}
+                            <dl class="des">
+                                <dt>
+                                    {% ifequal order.status 1 %}
+                                        <a href="{% url 'order:order_submit' order.order_number %}">
+                                            <span>提交订单</span>
+                                        </a>
+                                    {% endifequal %}
+                                </dt>
+                                <dd>
+                                    <ul class="cont">
+                                        <li>订单号：<span>{{ order.order_number }}</span></li>
+                                        <li>服务员手机号：<span>{{ order.waiter_phone }}</span></li>
+                                        <li>订单金额：<span>{{ order.total_money }}&nbsp;</span></li>
+                                        <li>下单时间：<span>{{ order.create_time }}</span></li>
+                                        <li>订单状态：
+                                            {% ifequal order.status 0 %}<span>未处理</span>{% endifequal %}
+                                            {% ifequal order.status 1 %}<span>处理中</span>{% endifequal %}
+                                            {% ifequal order.status 2 %}<span>处理完成</span>{% endifequal %}
+                                        </li>
+                                        <li>下单时间：<span>{{ order.time }}</span></li>
+                                    </ul>
+                                </dd>
+                            </dl>
+                        {% endfor %}
+                    {% endifequal %}
+                </div>
+                <div class="pageturn">
+                    <ul class="pagelist">
+                        {% if orders.has_previous %}
+                            <li class="long"><a href="?{{ orders.previous_page_number.querystring }}">上一页</a></li>
+                        {% endif %}
+
+                        {% for page in orders.pages %}
+                            {% if page %}
+                                {% ifequal page orders.number %}
+                                    <li class="active"><a href="{{ page.querystring }}">{{ page }}</a></li>
+                                {% else %}
+                                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                {% endifequal %}
+                            {% else %}
+                                <li class="none"><a href="">...</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if orders.has_next %}
+                            <li class="long"><a href="?{{ orders.next_page_number.querystring }}">下一页</a></li>
+                        {% endif %}
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block custom_js %}
+    <script>
+        $(function () {
+            $('#order_create_btn').on('click', function () {
+                orderCreate();
+            });
+        });
+
+        function orderCreate() {
+            var token = $('input[name=csrfmiddlewaretoken]').val();
+            $.ajax({
+                cache: false,
+                type: 'post',
+                url: '/order/create/',
+                data: {'csrfmiddlewaretoken': token },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status === "success") {
+                        alert(data.msg);
+                    } else if (data.status === 'failure') {
+                        alert(data.msg);
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block titile %}
+首页 | 废品回收系统
+{% endblock %}
+
+{% load staticfiles %}
+<!--crumbs start-->
+{% block custom_bread %}
+{% endblock %}
+
+
+{% block content %}
+    <div class="banner">
+			<div class="wp">
+				<div class="fl">
+					<div class="imgslide">
+						<ul class="imgs">
+
+                            {% for banner in banners %}
+                            <li>
+                                    <a href="{{ banner.url }}">
+                                        <img width="1200" height="478" src="{{ MEDIA_URL }}{{ banner.image }}" />
+                                    </a>
+                                </li>
+{% endfor %}
+
+						</ul>
+					</div>
+					<div class="unslider-arrow prev"></div>
+					<div class="unslider-arrow next"></div>
+				</div>
+
+				</div>
+
+
+			</div>
+<!--banner end-->
+<!--feature start-->
+	<section>
+		<div class="wp">
+			<ul class="feature">
+				<li class="feature1">
+					<img class="pic" src="{% static 'images/feature1.png' %}"/>
+					<p class="center">专业权威</p>
+				</li>
+				<li class="feature2">
+					<img class="pic" src="{% static 'images/feature2.png' %}"/>
+					<p class="center">信用保证</p>
+				</li>
+				<li class="feature3">
+					<img class="pic" src="{% static 'images/feature3.png' %}"/>
+					<p class="center">快捷方便</p>
+				</li>
+				<li class="feature4">
+					<img class="pic" src="{% static 'images/feature4.png' %}"/>
+					<p class="center">数据真实</p>
+				</li>
+			</ul>
+		</div>
+	</section>
+{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
